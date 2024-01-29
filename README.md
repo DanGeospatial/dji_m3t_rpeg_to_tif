@@ -1,8 +1,8 @@
-# dji_h20t_rpeg_to_tif
+# dji_m3t_rpeg_to_tif
 
 ## Description
 
-The DJI H20T creates thermal images (infrared) in a format, which is not compatible with current photogrammetric pipelines (e.g., Agisoft Metashape, Pix4D). Moreover, the DJI thermal data should be first calibrated according to emissivity, relative humidity and camera-target-distance. This procedure enables to convert entire folders from .rtpeg to .tif format while doing the calibration on the fly. The procedure is based on the DJI Thermal SDK.
+The DJI drones create thermal images (infrared) in a thermogram format, which is not compatible with current photogrammetric pipelines (e.g., Agisoft Metashape, Pix4D). Moreover, the DJI thermal data should first be alibrated according to emissivity, relative humidity and camera-target-distance. This procedure enables one to convert entire folders from .rtpeg to .tif format while doing the calibration on the fly. The procedure utilizes the DJI Thermal SDK.
 
 ![single](https://github.com/tejakattenborn/dji_h20t_rpeg_to_tif/blob/main/single_frames.png)
 
@@ -16,7 +16,7 @@ Important: Do not worry if the default image viewer on your OS will show 'white'
 
 For Metashape-Users: You may want to adjust the brightness and contrast settings in Metashape for visualizing the individual images. For most datasets setting the brightness to 1 percent and contrast to 200 percent works fine.
 
-Please contact me if you find any bugs or have problems getting the script running:
-https://rsc4earth.de/authors/tkattenborn/     https://twitter.com/TejaKattenborn
+Originally created by Teja Kattenborn and modified by me for enhanced speed through parallel processing.
+- https://rsc4earth.de/authors/tkattenborn/
 
 If you want, you can cite the repo using the provided citation file (see above).
