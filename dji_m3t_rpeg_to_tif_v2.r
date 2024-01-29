@@ -2,8 +2,20 @@
 # Make sure to change the humidity, camera-target-distance and emissivity according to your flight.
 # The output is directly compatible with Agisoft Metashape or Pix4D
 # The script calls DJI Thermal SDK which is available for download here: https://www.dji.com/downloads/softwares/dji-thermal-sdk
-# Originally created by Teja Kattenborn and modified by Daniel Nelson
 
+# Copyright (C) 2024 Teja Kattenborn
+# Copyright (C) 2024 Daniel Nelson
+# This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+#Load packages
 require(hexView)
 require(raster)
 require(ijtiff)
@@ -12,6 +24,7 @@ require(foreach)
 require(doParallel)
 
 # IMPORTANT: Make sure that you installed Perl on your system. Details see here under 'Installation': https://cran.r-project.org/web/packages/exifr/readme/README.html
+# For Windows environments feel free to check out https://strawberryperl.com/
 
 ### dir where DJI Thermal SDK is located (select appropriate release according to your OS).
 sdk_dir = "I:/dji_thermal_sdk_v1.4_20220929/utility/bin/windows/release_x64/"
