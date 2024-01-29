@@ -4,8 +4,10 @@ authors:
   - family-names: "Kattenborn"
     given-names: "Teja"
     orcid: "https://orcid.org/0000-0001-7381-3828"
-title: "DJI thermal rpeg to tif (v. 0.5)"
-version: 0.5
-doi: 10.5281/zenodo.8315941
-date-released: 2023-09-04
-url: "https://github.com/tejakattenborn/dji_h20t_rpeg_to_tif"
+  - family-names: "Nelson"
+    given-names: "Daniel"
+    orcid: "https://orcid.org/0009-0005-5200-6652"
+title: "DJI thermal rpeg to tif (v. 1.0)"
+version: 1.0
+date-released: 2024-01-29
+url: "https://github.com/DanGeospatial/dji_m3t_rpeg_to_tif"
