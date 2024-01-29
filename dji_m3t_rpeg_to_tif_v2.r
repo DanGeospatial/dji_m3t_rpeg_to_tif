@@ -1,47 +1,48 @@
-
-# This script converts DJI H20T Thermal data from *.rjpeg to calibrated *.tif files (while also transfering the metadata, e.g. lat/long coordinates).
-# Consider to adopt the humidity, camera-target-distance and emissivity according to your needs.
+# This script converts DJI M3T Thermal data from *.rjpeg to calibrated *.tif files (while also transfering the metadata, e.g. lat/long coordinates).
+# Make sure to change the humidity, camera-target-distance and emissivity according to your flight.
 # The output is directly compatible with Agisoft Metashape or Pix4D
-# The script calls DJI Thermal SDK which is available for download here: https://www.dji.com/de/downloads/products/zenmuse-h20-series
-# Questions? --> teja_dot_Kattenborn_at_uni_minus_leipzig_dot_de
-
+# The script calls DJI Thermal SDK which is available for download here: https://www.dji.com/downloads/softwares/dji-thermal-sdk
+# Originally created by Teja Kattenborn and modified by Daniel Nelson
 
 require(hexView)
 require(raster)
 require(ijtiff)
 require(exifr)
+require(foreach)
+require(doParallel)
 
 # IMPORTANT: Make sure that you installed Perl on your system. Details see here under 'Installation': https://cran.r-project.org/web/packages/exifr/readme/README.html
 
-
 ### dir where DJI Thermal SDK is located (select appropriate release according to your OS).
-sdk_dir = "JUST AN EXAMPLE/dji_thermal_sdk_v1.2_20211209/utility/bin/windows/release_x64/"
+sdk_dir = "I:/dji_thermal_sdk_v1.4_20220929/utility/bin/windows/release_x64/"
 setwd(sdk_dir) # convinient way to set SDK paths across OS systems (path compatibility)
 # short version for running commands in terminal
 run<-function(x) shell(x, intern=FALSE, wait=TRUE)
-
 
 ### acquisitions / environmental properties:
 emissivity = 0.96 # default: 1.0 range: 0.1-1.0 https://royalsocietypublishing.org/doi/pdf/10.1098/rsos.181281 (e.g., average 0.957 for vegetation)
 humidity = 38 # default: 70 %  range: 20-100 %
 distance = 25 # default: 5 m   range: 1-25 m    # altitude - object height (set to 25 if camera-target-distance > 25 m)
 
-
 ###  dir where your raw *.rpeg thermal images are placed. A output directory will be placed inside this folder.
-in_dir = "INSERT DIR" # rf 29 %
-
+in_dir = "I:/sample_data"
 
 out_dir = "ir_calib/"
 out_dir = paste0(in_dir, "/", out_dir)
 dir.create(out_dir)
 in_files = list.files(in_dir, full.names = T, pattern = "_T")
 
+### create parallel back-end:
+threads = detectCores()
+#reduce thread count so computer is usable
+clust <- makeCluster(threads[1]-2)
+registerDoParallel(clust)
 
-### calibration/conversion procedure (...could be paralleled)
-for(i in 1:length(in_files)){
+### calibration/conversion procedure
+foreach(i=1:length(in_files), .packages=c("hexView", "raster", "ijtiff", "exifr")) %dopar% {
   
-  # Some images may be overexposed. The following lines prevent the loop from stopping in such case (and there will be no putput).
-  # Test to reduce the humidty parameter if too many images are missing after the loop.
+  # Some images may be overexposed. The following lines prevent the loop from stopping in such case (and there will be no output).
+  # Test to reduce the humidity parameter if too many images are missing after the loop.
   tryCatch({
     
     # calibration to celsius
@@ -69,9 +70,13 @@ for(i in 1:length(in_files)){
     exiftool_call(paste0("-GPSLatitude=", in_exif$GPSLatitude[1]), out_name_tif)
     exiftool_call(paste0("-GPSLongitude=", in_exif$GPSLongitude[1]), out_name_tif)
     exiftool_call(paste0("-GPSLatitudeRef=", in_exif$GPSLatitudeRef[1]), out_name_tif)
-	exiftool_call(paste0("-GPSLongitudeRef=", in_exif$GPSLongitudeRef[1]), out_name_tif)
+    exiftool_call(paste0("-GPSLongitudeRef=", in_exif$GPSLongitudeRef[1]), out_name_tif)
+    
   }, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
 }
+
+#shut the cluster
+stopCluster(clust)
 
 ### remove temp files
 file.remove(list.files(in_dir, recursive = TRUE, full.names = T, pattern = "_original"))
