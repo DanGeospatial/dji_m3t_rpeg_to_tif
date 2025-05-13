@@ -67,8 +67,8 @@ foreach(i=1:length(in_files), .packages=c("hexView", "raster", "ijtiff", "exifr"
                " --emissivity ", emissivity, " --humidity ", humidity, " --distance ", distance, " --reflection ", reflection))
     
     # from .raw (hex) to .tif (celsius in float)
-    raw_data <- readBin(out_name, "double", size = 4, n = in_exif$ImageWidth*in_exif$ImageHeight)
-    image_matrix <- matrix(raw_data, nrow = in_exif$ImageHeight, ncol = in_exif$ImageWidth, byrow = T)
+    raw_data <- readBin(out_name, "double", size = 4, n = file.info(out_name)$size / 4)
+    image_matrix <- matrix(raw_data, nrow = 512, ncol = 640, byrow = TRUE)
     out_name_tif = paste0(substr(out_name, 0, nchar(out_name)-4), ".tif")
     write_tif(image_matrix, path = out_name_tif, overwrite = TRUE)
     
