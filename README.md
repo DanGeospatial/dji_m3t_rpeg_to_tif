@@ -20,3 +20,5 @@ Originally created by Teja Kattenborn and modified by me.
 - https://rsc4earth.de/authors/tkattenborn/
 
 If you want, you can cite the repo using the provided citation file (see above).
+
+NOTE!! Current support is not guaranteed to work with Infrared Image Super-Resolution mode (1280×1024 images)! 
