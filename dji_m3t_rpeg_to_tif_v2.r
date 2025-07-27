@@ -68,7 +68,12 @@ foreach(i=1:length(in_files), .packages=c("hexView", "raster", "ijtiff", "exifr"
     
     # from .raw (hex) to .tif (celsius in float)
     raw_data <- readBin(out_name, "double", size = 4, n = file.info(out_name)$size)
+    # _________________________________________WARNING!!! READ HERE!!! _____________________________________________
+    # If your images are using infrared image super resolution mode they will be size 1280×1024
+    # Uncomment the below line and comment out the line with 'nrow = 512, ncol = 640' or else your images will not look correct
+    # image_matrix <- matrix(raw_data, nrow = 1024, ncol = 1280, byrow = TRUE)
     image_matrix <- matrix(raw_data, nrow = 512, ncol = 640, byrow = TRUE)
+    # ______________________________________________________________________________________
     out_name_tif = paste0(substr(out_name, 0, nchar(out_name)-4), ".tif")
     write_tif(image_matrix, path = out_name_tif, overwrite = TRUE)
     
